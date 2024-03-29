@@ -1,6 +1,8 @@
-import tasks.Task;
-import tasks.TaskManager;
-import tasks.TaskStatus;
+package ru.smartidea.tasktracker;
+
+import ru.smartidea.tasktracker.model.Task;
+import ru.smartidea.tasktracker.service.TaskManager;
+import ru.smartidea.tasktracker.service.TaskStatus;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,9 +13,9 @@ public class Main {
         taskManager.createEpic("Выучить ООП", "Изучить наследование и инкапсуляцию",
                 TaskStatus.NEW);
         taskManager.createSubtask("Наследование", "Изучить наследование",
-                TaskStatus.IN_PROGRESS);
+                TaskStatus.IN_PROGRESS, 2);
         taskManager.createSubtask("Инкапсуляция", "Изучить инкапсуляцию",
-                TaskStatus.IN_PROGRESS);
+                TaskStatus.IN_PROGRESS, 2);
         // Получение списка задач
         System.out.println(taskManager.getAllTask());
         System.out.println(taskManager.getAllEpic());
