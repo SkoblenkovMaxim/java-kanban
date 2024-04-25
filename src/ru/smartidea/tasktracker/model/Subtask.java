@@ -3,11 +3,14 @@ package ru.smartidea.tasktracker.model;
 import ru.smartidea.tasktracker.service.TaskStatus;
 
 public class Subtask extends Task {
-    Epic epic;
     protected int epicId;
-    public Subtask(int id, String name, String description, TaskStatus status, Epic epic, int epicId) {
+    public Subtask(int id, String name, String description, TaskStatus status, int epicId) {
         super(id, name, description, status);
-        this.epic = epic;
+        this.epicId = epicId;
+    }
+
+    public Subtask(String name, String description, TaskStatus status, int epicId) {
+        super(name, description, status);
         this.epicId = epicId;
     }
 
@@ -15,14 +18,10 @@ public class Subtask extends Task {
         return epicId;
     }
 
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
-    }
-
     @Override
     public String toString() {
         return "ru.smartidea.tasktracker.model.Subtask{" +
-                "epicId='" + epicId + '\'' +
+                "epicId='" + getEpicId() + '\'' +
                 ", subtaskId='" + getId() + '\'' +
                 ", subtaskName='" + getName() + '\'' +
                 ", subtaskDescription='" + getDescription() + '\'' +

@@ -3,15 +3,25 @@ package ru.smartidea.tasktracker.model;
 import ru.smartidea.tasktracker.service.TaskStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    protected ArrayList<Integer> subtaskIds = new ArrayList<>();
+    protected List<Integer> subtaskIds = new ArrayList<>();
 
     public Epic(int id, String name, String description, TaskStatus status) {
         super(id, name, description, status);
     }
 
-    public ArrayList<Integer> getSubtaskIds() {
+    public Epic(String name, String description, TaskStatus status) {
+        super(name, description, status);
+    }
+
+    public Epic(List<Integer> subtaskIds, int id, String name, String description, TaskStatus status) {
+        super(id, name, description, status);
+        this.subtaskIds = subtaskIds;
+    }
+
+    public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 

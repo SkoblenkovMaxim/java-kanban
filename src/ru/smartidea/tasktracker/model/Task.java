@@ -15,6 +15,12 @@ public class Task {
         this.status = status;
     }
 
+    public Task(String name, String description, TaskStatus status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+
     public String getName() {
         return name;
     }
@@ -40,12 +46,23 @@ public class Task {
     }
 
     public TaskStatus getStatus() {
-        status = TaskStatus.NEW;
-        return status;
+        if (status == TaskStatus.NEW) {
+            return TaskStatus.NEW;
+        } else if (status == TaskStatus.IN_PROGRESS) {
+            return TaskStatus.IN_PROGRESS;
+        } else {
+            return TaskStatus.DONE;
+        }
     }
 
     public void setStatus(TaskStatus status) {
-        this.status = status;
+        if (status == TaskStatus.NEW) {
+            this.status = TaskStatus.NEW;
+        } else if (status == TaskStatus.IN_PROGRESS) {
+            this.status = TaskStatus.IN_PROGRESS;
+        } else {
+            this.status = TaskStatus.DONE;
+        }
     }
 
     @Override
