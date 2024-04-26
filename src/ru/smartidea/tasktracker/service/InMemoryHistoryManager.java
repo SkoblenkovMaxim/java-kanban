@@ -7,7 +7,15 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 //    InMemoryTaskManager inMemoryTaskManager;
-    static List<Task> historyTask = new ArrayList<>();
+    private List<Task> historyTask = new ArrayList<>();
+
+    public List<Task> getHistoryTask() {
+        return historyTask;
+    }
+
+    public void setHistoryTask(List<Task> historyTask) {
+        this.historyTask = historyTask;
+    }
 
     public InMemoryHistoryManager() {
         getHistory();
@@ -17,15 +25,15 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void addTask(Task task) {
         // Условие для проверки размера
-        if (historyTask.size() > 10) {
-            historyTask.remove(0);
+        if (getHistoryTask().size() > 10) {
+            getHistoryTask().remove(0);
         }
-        historyTask.add(task);
+        getHistoryTask().add(task);
     }
 
     // Получение последних десяти просмотренных пользователем задач
     @Override
     public List<Task> getHistory() {
-        return historyTask;
+        return getHistoryTask();
     }
 }

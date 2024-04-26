@@ -4,8 +4,8 @@ import ru.smartidea.tasktracker.model.Epic;
 import ru.smartidea.tasktracker.model.Subtask;
 import ru.smartidea.tasktracker.model.Task;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface TaskManager {
     // Получение списка задач
@@ -15,7 +15,7 @@ public interface TaskManager {
     List<Epic> getAllEpic();
 
     // Получение всех подзадач
-    HashMap<Integer, Subtask> getAllSubtask();
+    Map<Integer, Subtask> getAllSubtask();
 
     // Удаление всех задач
     void removeAllTask();
@@ -45,13 +45,13 @@ public interface TaskManager {
     Subtask createSubtask(Subtask subtask);
 
     // Обновление задач
-    HashMap<Integer, Task> updateTask(Task task);
+    Map<Integer, Task> updateTask(Task task);
 
     // Обновление эпика
-    HashMap<Integer, Epic> updateEpic(Epic epic);
+    Map<Integer, Epic> updateEpic(Epic epic);
 
     // Обновление подзадач
-    HashMap<Integer, Subtask> updateSubtask(Subtask subtask);
+    Map<Integer, Subtask> updateSubtask(Subtask subtask);
 
     // Удаление задач
     void deleteTask(int idTask);

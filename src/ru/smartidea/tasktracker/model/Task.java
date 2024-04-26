@@ -48,20 +48,22 @@ public class Task {
     public TaskStatus getStatus() {
         if (status == TaskStatus.NEW) {
             return TaskStatus.NEW;
+        } else if (status == TaskStatus.DONE) {
+            return TaskStatus.DONE;
         } else if (status == TaskStatus.IN_PROGRESS) {
             return TaskStatus.IN_PROGRESS;
         } else {
-            return TaskStatus.DONE;
+            return null;
         }
     }
 
     public void setStatus(TaskStatus status) {
         if (status == TaskStatus.NEW) {
             this.status = TaskStatus.NEW;
+        } else if (status == TaskStatus.DONE) {
+            this.status = TaskStatus.DONE;
         } else if (status == TaskStatus.IN_PROGRESS) {
             this.status = TaskStatus.IN_PROGRESS;
-        } else {
-            this.status = TaskStatus.DONE;
         }
     }
 
