@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-//    InMemoryTaskManager inMemoryTaskManager;
     private List<Task> historyTask = new ArrayList<>();
 
     public List<Task> getHistoryTask() {
-        return historyTask;
+        return new ArrayList<>(historyTask);
     }
 
     public void setHistoryTask(List<Task> historyTask) {
