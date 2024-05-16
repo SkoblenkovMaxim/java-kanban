@@ -4,6 +4,7 @@ import ru.smartidea.tasktracker.service.TaskStatus;
 
 public class Subtask extends Task {
     protected int epicId;
+
     public Subtask(int id, String name, String description, TaskStatus status, int epicId) {
         super(id, name, description, status);
         this.epicId = epicId;
