@@ -7,8 +7,6 @@ import ru.smartidea.tasktracker.service.*;
 
 public class Main {
     public static void main(String[] args) {
-//        HistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-//        TaskManager taskManager = new InMemoryTaskManager(inMemoryHistoryManager);
         Task task1 = new Task("TaskName1", "TaskDescription1", TaskStatus.NEW);
         Epic epic1 = new Epic("EpicName1", "EpicDescription1", TaskStatus.NEW);
         Subtask subtask1 = new Subtask("SubtaskName1", "SubtaskDescription1", TaskStatus.NEW, 2);
@@ -25,9 +23,6 @@ public class Main {
         taskManager.getEpicId(2);
         taskManager.getSubtaskId(3);
         // Получение списка задач
-//        System.out.println(taskManager.getAllTask());
-//        System.out.println(taskManager.getAllEpic());
-//        System.out.println(taskManager.getAllSubtask());
         printAllTasks(taskManager);
         // Обновление статусов задач
         System.out.println(taskManager.updateTask(new Task(1, "TaskName1",
@@ -47,9 +42,6 @@ public class Main {
         for (Task epic : manager.getAllEpic()) {
             System.out.println(epic);
 
-//            for (Task task : manager.getEpicSubtask(epic.getId()).values()) {
-//                System.out.println("--> " + task);
-//            }
             for (Task task : manager.getAllSubtask().values()) {
                 System.out.println("--> " + task);
             }
@@ -61,8 +53,5 @@ public class Main {
 
         System.out.println("История:");
         Managers.getDefault();
-//        for (Task task : Managers.getDefault()) {
-//            System.out.println(task);
-//        }
     }
 }
