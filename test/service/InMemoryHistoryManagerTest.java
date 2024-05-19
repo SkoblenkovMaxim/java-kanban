@@ -1,4 +1,4 @@
-package test.service;
+package service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -19,9 +19,6 @@ public class InMemoryHistoryManagerTest {
     private HistoryManager historyManager;
 
     Task task = new Task(1,"Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
-    Epic epic = new Epic(2,"Test addNewEpic", "Test addNewEpic description", TaskStatus.NEW);
-    Subtask subtask = new Subtask(3,"Test addNewSubtask", "Test addNewSubtask description",
-            TaskStatus.NEW, 2);
     Task task2 = new Task(4,"Test2 addNewTask2", "Test2 addNewTask2 description", TaskStatus.NEW);
 
     @BeforeEach
