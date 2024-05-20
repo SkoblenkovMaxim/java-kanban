@@ -75,7 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task == null) {
             return null;
         } else {
-            historyManager.addTask(task);
+            historyManager.add(task);
             return task;
         }
     }
@@ -130,7 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicId(Integer newTaskId) {
         Epic epic = getTaskEpicMap().get(newTaskId);
         if (epic != null && getTaskEpicMap().containsKey(newTaskId)) {
-            historyManager.addTask(epic);
+            historyManager.add(epic);
         } else {
             return null;
         }
@@ -249,7 +249,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtaskId(Integer newTaskId) {
         Subtask subtask = getTaskSubMap().get(newTaskId);
-        historyManager.addTask(subtask);
+        historyManager.add(subtask);
         return  subtask;
     }
 

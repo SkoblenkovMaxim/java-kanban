@@ -10,23 +10,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> head;
     private Node<Task> tail;
 
-    private List<Task> historyTask = new ArrayList<>();
-
-    public List<Task> getHistoryTask() {
-        return getTasks();
-    }
-
-    public void setHistoryTask(List<Task> historyTask) {
-        this.historyTask = historyTask;
-    }
-
     public InMemoryHistoryManager() {
         receivedTasksMap = new HashMap<>();
     }
 
     // Добавление просмотренных задач
     @Override
-    public Task addTask(Task task) {
+    public Task add(Task task) {
         if (task != null) {
             linkLast(task);
         }
@@ -42,7 +32,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     // Получение последних десяти просмотренных пользователем задач
     @Override
     public List<Task> getHistory() {
-        return getHistoryTask();
+        return new ArrayList<>(getTasks());
     }
 
     public void removeNode(Node<Task> node) {
@@ -67,7 +57,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    private void linkLast(Task task) {
+    public void linkLast(Task task) {
         if (receivedTasksMap.containsKey(task.getId())) {
             removeNode(receivedTasksMap.get(task.getId()));
         }
@@ -82,7 +72,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    private List<Task> getTasks() {
+    public List<Task> getTasks() {
         List<Task> tasks = new LinkedList<>();
         Node<Task> currentNode = head;
         while (currentNode != null) {

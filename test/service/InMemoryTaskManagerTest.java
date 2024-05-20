@@ -307,9 +307,9 @@ class InMemoryTaskManagerTest {
         Task epicId = taskManager.getEpicId(epic.getId());
         Task subtaskId = taskManager.getSubtaskId(subtask.getId());
 
-        historyManager.addTask(taskId);
-        historyManager.addTask(epicId);
-        historyManager.addTask(subtaskId);
+        historyManager.add(taskId);
+        historyManager.add(epicId);
+        historyManager.add(subtaskId);
         List<Task> history = historyManager.getHistory();
 
         assertNotNull(history);

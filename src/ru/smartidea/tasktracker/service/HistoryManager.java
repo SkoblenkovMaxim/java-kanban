@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface HistoryManager {
     // Добавление просмотренных задач в список
-    Task addTask(Task task);
+    Task add(Task task);
 
     // Удаление задачи из просмотра
     void remove(int id);
