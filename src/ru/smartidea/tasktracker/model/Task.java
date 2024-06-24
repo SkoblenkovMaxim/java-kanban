@@ -96,7 +96,6 @@ public class Task {
     }
     // Метод сохранения задачи в строку
     public String toStringFromFile(Task task) {
-        return String.format("%s,%s,%s,%s,%s,%s",
-                task.id, task.type, task.name, task.status, task.description, "");
+        return String.format("%s,%s,%s,%s,%s,%s", task.id, task.type, task.name, task.status, task.description, "");
     }
 }
