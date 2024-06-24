@@ -28,7 +28,9 @@ public class Epic extends Task {
         this.type = Type.EPIC;
     }
 
-    public Epic() {}
+    public Epic() {
+
+    }
 
     public List<Integer> getSubtaskIds() {
         return subtaskIds;
@@ -47,7 +49,7 @@ public class Epic extends Task {
                 ", epicTaskStatus='" + getStatus() + '\'' +
                 '}';
     }
-//id,type,name,status,description,epic
+
 //    @Override
     public String toStringFromFile(Epic epic) {
         return String.format("%s,%s,%s,%s,%s,%s", epic.getId(), epic.getType(), epic.getName(),
