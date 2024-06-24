@@ -64,4 +64,7 @@ public interface TaskManager {
 
     // Обновление статуса эпика
     void updateEpicStatus(Epic epic);
+
+    // Получение истории
+    List<Task> getHistory();
 }

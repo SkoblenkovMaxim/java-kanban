@@ -1,12 +1,18 @@
 package ru.smartidea.tasktracker.model;
 
 import ru.smartidea.tasktracker.service.TaskStatus;
+import ru.smartidea.tasktracker.service.Type;
 
 public class Task {
     private String name;
     private String description;
     private int id;
     private TaskStatus status;
+    private Type type;
+
+    public Task() {
+
+    }
 
     public Task(int id, String name, String description, TaskStatus status) {
         this.name = name;
@@ -21,11 +27,19 @@ public class Task {
         this.status = status;
     }
 
+    public Task(int id, String name, TaskStatus status, String description) {
+        this.id = id;
+        this.type = Type.TASK;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+
     public String getName() {
         return name;
     }
 
-    public void setName(String taskName) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -67,6 +81,10 @@ public class Task {
         }
     }
 
+    public Type getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return "ru.smartidea.tasktracker.model.Task{" +
@@ -75,5 +93,10 @@ public class Task {
                 ", taskDescription='" + getDescription() + '\'' +
                 ", taskStatus='" + getStatus() + '\'' +
                 '}';
+    }
+    // Метод сохранения задачи в строку
+    public String toStringFromFile(Task task) {
+        return String.format("%s,%s,%s,%s,%s,%s",
+                task.id, task.type, task.name, task.status, task.description, "");
     }
 }
