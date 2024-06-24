@@ -51,7 +51,8 @@ public class Epic extends Task {
     }
 
 //    @Override
-    public String toStringFromFile(Epic epic) {
+    public String toStringFromFile(Epic epic)
+    {
         return String.format("%s,%s,%s,%s,%s,%s", epic.getId(), epic.getType(), epic.getName(),
                 epic.getStatus(), epic.getDescription(), "");
     }
