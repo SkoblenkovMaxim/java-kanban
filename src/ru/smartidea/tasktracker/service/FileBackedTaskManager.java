@@ -55,7 +55,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     private static Task fromString(String value) {
         String[] element = value.split(",");
         int id = Integer.parseInt(element[0]);
-        String type = element[1];
+        Type type = Type.valueOf(element[1]);
         String name = element[2];
         TaskStatus status = TaskStatus.valueOf(element[3].toUpperCase());
         String description = element[4];
@@ -64,12 +64,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         if (element.length == 6) {
             epicId = Integer.parseInt(element[5]);
         }
-        if (type.equals("Epic")) {
+
+        if (type == Type.EPIC) {
             Epic epic = new Epic(name, description);
             epic.setId(id);
             epic.setStatus(status);
             return epic;
-        } else if (type.equals("Subtask")) {
+        } else if (type == Type.SUBTASK) {
             Subtask subtask = new Subtask(name, description, status, epicId);
             subtask.setId(id);
             return subtask;

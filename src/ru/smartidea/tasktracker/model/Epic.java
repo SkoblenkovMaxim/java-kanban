@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Epic extends Task {
     protected List<Integer> subtaskIds = new ArrayList<>();
-    private Type type;
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
@@ -23,9 +22,9 @@ public class Epic extends Task {
         this.subtaskIds = subtaskIds;
     }
 
-    public Epic(int id, String name, String description, TaskStatus status) {
+    public Epic(int id, String name, TaskStatus status, String description) {
         super(id, name, description, status);
-        this.type = Type.EPIC;
+        getType();
     }
 
     public Epic() {
@@ -37,6 +36,11 @@ public class Epic extends Task {
 
     public void setSubtaskIds(int id) {
         subtaskIds.add(id);
+    }
+
+    @Override
+    public Type getType() {
+        return Type.EPIC;
     }
 
     @Override

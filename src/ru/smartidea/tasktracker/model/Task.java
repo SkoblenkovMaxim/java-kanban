@@ -8,7 +8,6 @@ public class Task {
     private String description;
     private int id;
     private TaskStatus status;
-    private Type type;
 
     public Task() {
 
@@ -29,7 +28,7 @@ public class Task {
 
     public Task(int id, String name, TaskStatus status, String description) {
         this.id = id;
-        this.type = Type.TASK;
+        getType();
         this.name = name;
         this.status = status;
         this.description = description;
@@ -82,7 +81,7 @@ public class Task {
     }
 
     public Type getType() {
-        return type;
+        return Type.TASK;
     }
 
     @Override
