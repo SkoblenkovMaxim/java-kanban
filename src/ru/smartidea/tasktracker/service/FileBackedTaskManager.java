@@ -7,6 +7,9 @@ import ru.smartidea.tasktracker.model.Task;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
@@ -33,7 +36,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
 
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,startTime,duration,epic\n");
 
             for (Task task : getAllTask()) {
                 writer.write(task.toStringFromFile(task) + "\n");
@@ -59,23 +62,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String name = element[2];
         TaskStatus status = TaskStatus.valueOf(element[3].toUpperCase());
         String description = element[4];
+        LocalDateTime startTime = LocalDateTime.parse(element[5]);
+        Duration duration = Duration.ofMinutes(Long.parseLong(element[6]));
         int epicId = 0;
 
-        if (element.length == 6) {
-            epicId = Integer.parseInt(element[5]);
+        if (element.length == 8) {
+            epicId = Integer.parseInt(element[7]);
         }
 
         if (type == Type.EPIC) {
-            Epic epic = new Epic(name, description);
+            Epic epic = new Epic(name, description, startTime, duration);
             epic.setId(id);
             epic.setStatus(status);
             return epic;
         } else if (type == Type.SUBTASK) {
-            Subtask subtask = new Subtask(name, description, status, epicId);
+            Subtask subtask = new Subtask(name, description, status, startTime, duration, epicId);
             subtask.setId(id);
             return subtask;
         } else {
-            Task task = new Task(name, description, status);
+            Task task = new Task(name, description, status, startTime, duration);
             task.setId(id);
             return task;
         }
@@ -174,7 +179,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         } else {
             return null;
         }
-
     }
 
     // Удаление эпика

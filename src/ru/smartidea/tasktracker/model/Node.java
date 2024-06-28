@@ -1,6 +1,7 @@
 package ru.smartidea.tasktracker.model;
 
 public class Node<T> {
+    public Task task;
     private T data;
     private Node<T> previous;
     private Node<T> next;

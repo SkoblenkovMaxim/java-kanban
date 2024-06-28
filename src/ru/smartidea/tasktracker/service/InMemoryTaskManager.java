@@ -4,10 +4,9 @@ import ru.smartidea.tasktracker.model.Epic;
 import ru.smartidea.tasktracker.model.Subtask;
 import ru.smartidea.tasktracker.model.Task;
 
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int id;
@@ -16,6 +15,8 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> taskEpicMap = new HashMap<>(); // Мапа для хранения эпиков
     private Map<Integer, Subtask> taskSubMap = new HashMap<>(); // Мапа для хранения подзадач
     HistoryManager historyManager;
+    private final Comparator<Task> comparator = Comparator.comparing(Task::getStartTime);
+    private final Set<Task> prioritizedTasks = new TreeSet<>(comparator);
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -64,6 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
             int taskId = idIncrease();
             task.setId(taskId);
             getTaskOrdinaryMap().put(taskId, task);
+            addPrioritizedTasks(task);
             return task;
         }
     }
@@ -199,6 +201,31 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    // Вычисление продолжительности эпика с учетом его подзадач
+    public void getEpicEndTime(Epic epic) {
+        if (epic.getSubtaskIds().isEmpty()) {
+            epic.setDuration(Duration.ofMinutes(0));
+            epic.setStartTime(null);
+            epic.setEndTime(null);
+            return;
+        }
+
+        epic.setStartTime(taskSubMap.get(epic.getSubtaskIds().get(0)).getStartTime());
+        epic.setEndTime(taskSubMap.get(epic.getSubtaskIds().get(0)).getEndTime());
+        Duration epicDuration = Duration.ofMinutes(0);
+        for (Integer id : epic.getSubtaskIds()) {
+            if (epic.getStartTime().isAfter(taskSubMap.get(id).getStartTime())) {
+                epic.setStartTime(taskSubMap.get(id).getStartTime());
+            }
+            if (epic.getEndTime().isBefore((taskSubMap.get(id).getEndTime()))) {
+                epic.setEndTime(taskSubMap.get(id).getEndTime());
+            }
+            epicDuration = epicDuration.plus(taskSubMap.get(id).getDuration());
+        }
+        epic.setDuration(epicDuration);
+
+    }
+
     // Подзадачи
     // Создание подзадач
     @Override
@@ -208,6 +235,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             int taskId = idIncrease();
             subtask.setId(taskId);
+            addPrioritizedTasks(subtask);
             Epic epic = getTaskEpicMap().get(subtask.getEpicId());
             if (epic != null) {
                 getTaskSubMap().put(taskId, subtask);
@@ -250,6 +278,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Map<Integer, Subtask> updateSubtask(Subtask subtask) {
         if (getTaskSubMap().containsKey(subtask.getId())) {
             getTaskSubMap().put(subtask.getId(), subtask);
+            addPrioritizedTasks(subtask);
         }
         return getTaskSubMap();
     }
@@ -267,5 +296,30 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return prioritizedTasks.stream().toList();
+    }
+
+    public void addPrioritizedTasks(Task task) {
+        boolean isIntersection = checkIntersections(task);
+        if (!isIntersection) {
+            prioritizedTasks.add(task);
+        } else {
+            throw new IntersectionException("Ваши задачи пересекаются");
+        }
+    }
+
+    public boolean checkIntersections(Task task) {
+
+        LocalDateTime startOfTask = task.getStartTime();
+        LocalDateTime endOfTask = task.getEndTime();
+
+        return prioritizedTasks.stream()
+                .filter(prioritizedTasks -> prioritizedTasks.getStartTime() != null)
+                .anyMatch(prioritizedTasks -> !endOfTask.isBefore(prioritizedTasks.getStartTime())
+                        && !prioritizedTasks.getEndTime().isBefore(startOfTask));
     }
 }

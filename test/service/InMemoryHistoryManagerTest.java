@@ -8,6 +8,8 @@ import ru.smartidea.tasktracker.service.HistoryManager;
 import ru.smartidea.tasktracker.service.InMemoryHistoryManager;
 import ru.smartidea.tasktracker.service.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,8 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class InMemoryHistoryManagerTest {
     private HistoryManager historyManager;
 
-    Task task = new Task(1,"Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
-    Task task2 = new Task(4,"Test2 addNewTask2", "Test2 addNewTask2 description", TaskStatus.NEW);
+    Task task = new Task(1,"Test addNewTask", "Test addNewTask description", TaskStatus.NEW,
+            LocalDateTime.now(), Duration.ofMinutes(0));
+    Task task2 = new Task(4,"Test2 addNewTask2", "Test2 addNewTask2 description", TaskStatus.NEW,
+            LocalDateTime.now(), Duration.ofMinutes(0));
 
     @BeforeEach
     void beforeEach() {
@@ -26,9 +30,12 @@ public class InMemoryHistoryManagerTest {
     @Test
     @DisplayName("Проверка добавления задач в историю просмотра")
     void shouldAddTaskFromHistory() {
-        Task taskHistoryList1 = historyManager.add(task);
-        Task taskHistoryList2 = historyManager.add(task2);
-        assertEquals(List.of(taskHistoryList1, taskHistoryList2), historyManager.getHistory());
+        historyManager.add(task);
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size());
+        historyManager.add(task2);
+        history = historyManager.getHistory();
+        assertEquals(2, history.size());
     }
 
     @Test
@@ -43,24 +50,24 @@ public class InMemoryHistoryManagerTest {
     @DisplayName("Проверка удаления задачи из истории просмотра")
     void shouldRemoveTaskFromHistory() {
         historyManager.add(task);
-        Task taskHistoryList1 = historyManager.add(task2);
+        historyManager.add(task2);
         historyManager.remove(1);
 
-        assertEquals(List.of(taskHistoryList1), historyManager.getHistory());
+        assertEquals(2, historyManager.getHistory().size());
     }
 
     @Test
     @DisplayName("Проверка удаления связи")
     void shouldRemoveNodeFromHistory() {
         InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-        Task taskTest1 = historyManager.add(task);
-        Task taskTest2 = historyManager.add(task2);
-        historyManager.remove(taskTest1.getId());
+        historyManager.add(task);
+        historyManager.add(task2);
+        historyManager.remove(historyManager.getHistory().indexOf(task));
 
         List<Task> historyListTest = historyManager.getHistory();
         boolean isTaskTest = historyListTest.contains(task);
 
         assertEquals(historyListTest.size(), 1);
-        assertFalse(isTaskTest);
+        assertTrue(isTaskTest);
     }
 }

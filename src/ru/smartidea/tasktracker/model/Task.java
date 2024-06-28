@@ -3,32 +3,46 @@ package ru.smartidea.tasktracker.model;
 import ru.smartidea.tasktracker.service.TaskStatus;
 import ru.smartidea.tasktracker.service.Type;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
     private String name;
     private String description;
     private int id;
     private TaskStatus status;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task() {
 
     }
 
-    public Task(int id, String name, String description, TaskStatus status) {
+    public Task(int id, String name, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.description = description;
-        this.id = id;
         this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
-    public Task(String name, String description, TaskStatus status) {
+//    public Task(int id, String name, String description, TaskStatus status) {
+//        this.name = name;
+//        this.description = description;
+//        this.id = id;
+//        this.status = status;
+//    }
+
+    public Task(String name, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Task(int id, String name, TaskStatus status, String description) {
         this.id = id;
-        getType();
         this.name = name;
         this.status = status;
         this.description = description;
@@ -96,7 +110,28 @@ public class Task {
 
     // Метод сохранения задачи в строку
     public String toStringFromFile(Task task) {
-        return String.format("%s,%s,%s,%s,%s,%s", task.getId(), task.getType(), task.getName(), task.getStatus(),
-                task.getDescription(), "");
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getType(), task.getName(),
+                task.getStatus(), task.getDescription(), getStartTime(), getDuration(), "");
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    // дата и время завершения задачи, которые рассчитываются исходя из startTime и duration.
+    public LocalDateTime getEndTime() {
+        return getStartTime().plus(getDuration());
     }
 }
