@@ -85,11 +85,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getAllTask() {
         List<Task> allTasks = new ArrayList<>();
         allTasks.addAll(getTaskOrdinaryMap().values());
-        if (allTasks.size() == 0) {
-            return null;
-        } else {
-            return allTasks;
-        }
+        return allTasks;
     }
 
     // Удаление задачи по id
@@ -142,11 +138,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Epic> getAllEpic() {
         List<Epic> allEpics = new ArrayList<>();
         allEpics.addAll(getTaskEpicMap().values());
-        if (allEpics.size() == 0) {
-            return null;
-        } else {
-            return allEpics;
-        }
+        return allEpics;
     }
 
     // Удаление эпика
@@ -270,5 +262,10 @@ public class InMemoryTaskManager implements TaskManager {
             updateEpicStatus(epic);
             historyManager.getHistory().remove(id);
         }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 }

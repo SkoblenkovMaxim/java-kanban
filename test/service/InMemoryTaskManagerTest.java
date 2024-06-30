@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DisplayName("InMemoryTaskManager")
 class InMemoryTaskManagerTest {
@@ -89,7 +90,7 @@ class InMemoryTaskManagerTest {
     public void shouldNotGetListTask() {
         taskManager.createTask(null);
         List<Task> taskList = taskManager.getAllTask();
-        assertNull((taskList), "Список должен быть пустым");
+        assertTrue(taskList.isEmpty(), "Список должен быть пустым");
     }
 
     @Test
@@ -114,7 +115,7 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task);
         taskManager.removeAllTask();
         List<Task> taskList = taskManager.getAllTask();
-        assertNull(taskList);
+        assertTrue(taskList.isEmpty());
     }
 
     @Test
@@ -172,7 +173,7 @@ class InMemoryTaskManagerTest {
     public void shouldGetNullListEpic() {
         taskManager.createEpic(null);
         List<Epic> epicList = taskManager.getAllEpic();
-        assertNull(epicList);
+        assertTrue(epicList.isEmpty());
     }
 
     @Test
@@ -181,7 +182,7 @@ class InMemoryTaskManagerTest {
         Epic epicTest = taskManager.createEpic(epic);
         taskManager.deleteEpic(epic.getId());
         List<Epic> epicTest1 = taskManager.getAllEpic();
-        assertNull(epicTest1);
+        assertTrue(epicTest1.isEmpty());
     }
 
     @Test
@@ -190,7 +191,7 @@ class InMemoryTaskManagerTest {
         taskManager.createEpic(epic);
         taskManager.removeAllEpic();
         List<Epic> taskEpic = taskManager.getAllEpic();
-        assertNull(taskEpic);
+        assertTrue(taskEpic.isEmpty());
     }
 
     @Test
@@ -293,7 +294,7 @@ class InMemoryTaskManagerTest {
         taskManager.deleteSubtask(subtask.getId(), epicWithSubtask);
         List<Task> taskList = taskManager.getAllTask();
         //assertEquals(0, taskList.size(), "Неверное количество задач.");
-        assertNull(taskList);
+        assertTrue(taskList.isEmpty());
     }
 
     @Test

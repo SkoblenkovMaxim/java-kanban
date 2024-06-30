@@ -1,6 +1,7 @@
 package ru.smartidea.tasktracker.model;
 
 import ru.smartidea.tasktracker.service.TaskStatus;
+import ru.smartidea.tasktracker.service.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.List;
 public class Epic extends Task {
     protected List<Integer> subtaskIds = new ArrayList<>();
 
-    public Epic(int id, String name, String description, TaskStatus status) {
-        super(id, name, description, status);
+    public Epic(String name, String description) {
+        super(name, description, TaskStatus.NEW);
     }
 
     public Epic(String name, String description, TaskStatus status) {
@@ -21,12 +22,24 @@ public class Epic extends Task {
         this.subtaskIds = subtaskIds;
     }
 
+    public Epic(int id, String name, TaskStatus status, String description) {
+        super(id, name, description, status);
+    }
+
+    public Epic() {
+    }
+
     public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 
     public void setSubtaskIds(int id) {
         subtaskIds.add(id);
+    }
+
+    @Override
+    public Type getType() {
+        return Type.EPIC;
     }
 
     @Override
@@ -37,5 +50,10 @@ public class Epic extends Task {
                 ", epicTaskDescription='" + getDescription() + '\'' +
                 ", epicTaskStatus='" + getStatus() + '\'' +
                 '}';
+    }
+
+    public String toStringFromFile(Epic epic) {
+        return String.format("%s,%s,%s,%s,%s,%s", epic.getId(), epic.getType(), epic.getName(),
+                epic.getStatus(), epic.getDescription(), "");
     }
 }
