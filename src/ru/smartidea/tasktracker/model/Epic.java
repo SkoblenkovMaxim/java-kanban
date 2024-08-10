@@ -26,7 +26,8 @@ public class Epic extends Task {
         this.subtaskIds = subtaskIds;
     }
 
-    public Epic(int id, String name, TaskStatus status, String description, LocalDateTime startTime, Duration duration) {
+    public Epic(int id, String name, TaskStatus status, String description, LocalDateTime startTime,
+                Duration duration) {
         super(id, name, description, status, startTime, duration);
     }
 
