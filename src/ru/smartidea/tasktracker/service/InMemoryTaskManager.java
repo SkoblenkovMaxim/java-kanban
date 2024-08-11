@@ -223,7 +223,6 @@ public class InMemoryTaskManager implements TaskManager {
             epicDuration = epicDuration.plus(taskSubMap.get(id).getDuration());
         }
         epic.setDuration(epicDuration);
-
     }
 
     // Подзадачи
@@ -304,22 +303,36 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void addPrioritizedTasks(Task task) {
-        boolean isIntersection = checkIntersections(task);
-        if (!isIntersection) {
+        Task intersectingTask = checkIntersections(task);
+
+        if (intersectingTask == null) {
             prioritizedTasks.add(task);
         } else {
-            throw new IntersectionException("Ваши задачи пересекаются");
+            throw new IntersectionException("Задача " + task.getId() + ": " + task.getName() +
+                    " пересекается с задачей " + intersectingTask.getId() + ": " + intersectingTask.getName());
         }
     }
 
-    public boolean checkIntersections(Task task) {
-
+    public Task checkIntersections(Task task) {
         LocalDateTime startOfTask = task.getStartTime();
         LocalDateTime endOfTask = task.getEndTime();
 
-        return prioritizedTasks.stream()
-                .filter(prioritizedTasks -> prioritizedTasks.getStartTime() != null)
-                .anyMatch(prioritizedTasks -> !endOfTask.isBefore(prioritizedTasks.getStartTime())
-                        && !prioritizedTasks.getEndTime().isBefore(startOfTask));
+        // Проверяем, что новая задача имеет корректные временные рамки
+        if (startOfTask == null || endOfTask == null) {
+            return null; // Возвращаем null, если временные рамки некорректны
+        }
+
+        for (Task existingTask : prioritizedTasks) {
+            LocalDateTime existingStart = existingTask.getStartTime();
+            LocalDateTime existingEnd = existingTask.getEndTime();
+
+            if (existingStart != null && existingEnd != null) {
+                if (!endOfTask.isBefore(existingStart) && !existingEnd.isBefore(startOfTask)) {
+                    return existingTask; // Возвращаем пересекающуюся задачу
+                }
+            }
+        }
+
+        return null; // Пересечений не найдено
     }
 }
