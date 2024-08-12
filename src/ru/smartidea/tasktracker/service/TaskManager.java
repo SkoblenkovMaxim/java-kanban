@@ -67,4 +67,7 @@ public interface TaskManager {
 
     // Получение истории
     List<Task> getHistory();
+
+    // Получение списка отсортированных по приоритету задач
+    List<Task> getPrioritizedTasks();
 }

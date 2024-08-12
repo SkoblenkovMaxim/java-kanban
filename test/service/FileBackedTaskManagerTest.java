@@ -11,7 +11,8 @@ import ru.smartidea.tasktracker.service.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,19 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Проверка FileBackedTaskManager")
-public class FileBackedTaskManagerTest {
-    private final Path pathTest = Path.of("resources/taskTest.csv");
-    private final File fileTest = File.createTempFile("taskTest", null);
-
-    FileBackedTaskManager manager;
-    FileBackedTaskManager taskManagerTest;
-
-    public FileBackedTaskManagerTest() throws IOException {
-    }
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+    File fileTest;
 
     @BeforeEach
-    public void beforeEach() {
-        manager = new FileBackedTaskManager(Managers.getDefaultHistory(), fileTest);
+    public void beforeEach() throws IOException {
+        fileTest = File.createTempFile("taskTest", "csv");
+        taskManager = new FileBackedTaskManager(Managers.getDefaultHistory(), fileTest);
     }
 
     @AfterEach
@@ -43,25 +38,35 @@ public class FileBackedTaskManagerTest {
     @Test
     @DisplayName("Сохранение и загрузка пустого файла")
     public void saveAndLoadEmptyFile() {
-        manager.save();
-        manager = FileBackedTaskManager.loadFromFile(fileTest);
+        taskManager.save();
+        taskManager = FileBackedTaskManager.loadFromFile(fileTest);
 
         assertTrue(fileTest.exists());
-        assertEquals(Collections.EMPTY_LIST, manager.getAllTask());
+        assertEquals(Collections.EMPTY_LIST, taskManager.getAllTask());
+    }
+
+    @Test
+    @DisplayName("не загружается когда нет файла для загрузки")
+    void whenLoadTasksAndFileNotExists() {
+        assertThrows(ManagerSaveException.class, () -> {
+            FileBackedTaskManager.loadFromFile(new File("Path/notExistPath"));
+        }, "Не удалось загрузить данные");
     }
 
     @Test
     @DisplayName("Сохранение и загрузка нескольких задач")
     public void saveAndLoadTasks() {
-        Task taskTest1 = new Task(1, "TaskName1", "TaskDescriprion1", TaskStatus.NEW);
-        Task taskTest2 = new Task(2, "TaskName2", "TaskDescriprion2", TaskStatus.NEW);
+        Task taskTest1 = new Task(1, "TaskName1", "TaskDescriprion1", TaskStatus.NEW,
+                LocalDateTime.now(), Duration.ofMinutes(0));
+        Task taskTest2 = new Task(2, "TaskName2", "TaskDescriprion2", TaskStatus.NEW,
+                LocalDateTime.now().plusMinutes(5), Duration.ofMinutes(5));
 
-        manager.createTask(taskTest1);
-        manager.createTask(taskTest2);
-        taskManagerTest = FileBackedTaskManager.loadFromFile(fileTest);
-        List<Task> taskList = taskManagerTest.getAllTask();
-        List<Epic> epicList = taskManagerTest.getAllEpic();
-        Map<Integer, Subtask> subtaskList = taskManagerTest.getAllSubtask();
+        taskManager.createTask(taskTest1);
+        taskManager.createTask(taskTest2);
+        taskManager = FileBackedTaskManager.loadFromFile(fileTest);
+        List<Task> taskList = taskManager.getAllTask();
+        List<Epic> epicList = taskManager.getAllEpic();
+        Map<Integer, Subtask> subtaskList = taskManager.getAllSubtask();
 
         assertTrue(fileTest.exists());
         assertEquals(2, taskList.size());
