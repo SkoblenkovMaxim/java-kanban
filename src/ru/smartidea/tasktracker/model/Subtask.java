@@ -58,6 +58,6 @@ public class Subtask extends Task {
 //    @Override
     public String toStringFromFile() {
         return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", getId(), getType(), getName(),
-                getStatus(), getDescription(), getStartTime(), getEndTime(), getDuration(), getEpicId());
+                getStatus(), getDescription(), getStartTime(), getEndTime(), getDuration().toMinutes(), getEpicId());
     }
 }
