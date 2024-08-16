@@ -55,8 +55,7 @@ public class HttpTaskServerTest {
     @Test
     void shouldPOSTTask() throws IOException, InterruptedException {
         manager.createTask(task);
-        //URI uri = URI.create("http://localhost:8080/tasks/task/");
-        URI url = URI.create("http://localhost:8080/tasks/");
+        URI url = URI.create("http://localhost:8080/tasks/task/");
         String json = gson.toJson(url);
         HttpClient client = HttpClient
                 .newBuilder()
