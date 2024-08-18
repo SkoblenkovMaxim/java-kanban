@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     private static final Logger logger = Logger.getLogger(EpicHandler.class.getName());
+
     public EpicHandler(TaskManager manager, Gson gson) {
         super(manager, gson);
     }
