@@ -9,15 +9,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
+    private static final Logger logger = Logger.getLogger(TaskHandler.class.getName());
+
     public TaskHandler(TaskManager manager, Gson gson) {
         super(manager, gson);
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        System.out.println("Началась обработка /Task запроса от клиента.");
+        logger.info("Началась обработка /Task запроса от клиента.");
 
         switch (httpExchange.getRequestMethod()) {
             case "POST":

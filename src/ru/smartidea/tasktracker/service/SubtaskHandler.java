@@ -9,15 +9,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
+    private static final Logger logger = Logger.getLogger(SubtaskHandler.class.getName());
+
     public SubtaskHandler(TaskManager manager, Gson gson) {
         super(manager, gson);
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        System.out.println("Началась обработка /SubTask запроса от клиента.");
+        logger.info("Началась обработка /SubTask запроса от клиента.");
 
         switch (httpExchange.getRequestMethod()) {
             case "POST":

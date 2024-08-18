@@ -10,15 +10,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class EpicHandler extends BaseHttpHandler implements HttpHandler {
+    private static final Logger logger = Logger.getLogger(EpicHandler.class.getName());
     public EpicHandler(TaskManager manager, Gson gson) {
         super(manager, gson);
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        System.out.println("Началась обработка /Epic запроса от клиента.");
+        logger.info("Началась обработка /Epic запроса от клиента.");
+        Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
+        Epic epicID = manager.getEpicId(id);
 
         switch (httpExchange.getRequestMethod()) {
             case "POST":
@@ -35,10 +39,11 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 } else {
                     throw new RuntimeException("Данные не переданы");
                 }
+                break;
             case "GET":
-                Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
+                //Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
                 String subPath = getPath(httpExchange.getRequestURI().getPath());
-                if (manager.getEpicId(id) != null) {
+                if (epicID != null) {
                     if (id == null) {
                         List<Epic> tasks = manager.getAllEpic();
                         String response = gson.toJson(tasks);
@@ -48,7 +53,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                         String response = gson.toJson(epicsSubTasks);
                         sendText(httpExchange, response);
                     } else {
-                        if (manager.getEpicId(id) != null) {
+                        if (epicID != null) {
                             Task task = manager.getEpicId(id);
                             String response = gson.toJson(task);
                             sendText(httpExchange, response);
@@ -59,6 +64,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 } else {
                     sendNotFound(httpExchange, "Эпика с id " + id + " нет.");
                 }
+                break;
             case "DELETE":
                 Integer deleteId = getIdFromPath(httpExchange.getRequestURI().getPath());
                 try {
@@ -71,12 +77,14 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 } catch (Exception e) {
                     sendServerError(httpExchange);
                 }
+                break;
             default:
                 try {
                     sendNotFound(httpExchange, "Такого запроса не существует");
                 } catch (Exception e) {
                     sendServerError(httpExchange);
                 }
+                break;
         }
     }
 }

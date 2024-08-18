@@ -7,15 +7,18 @@ import ru.smartidea.tasktracker.model.Task;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
+    private static final Logger logger = Logger.getLogger(PrioritizedHandler.class.getName());
+
     public PrioritizedHandler(TaskManager manager, Gson gson) {
         super(manager,gson);
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        System.out.println("Началась обработка /Prioritized запроса от клиента.");
+        logger.info("Началась обработка /Prioritized запроса от клиента.");
         try {
             if (httpExchange.getRequestMethod().equals("GET")) {
                 List<Task> prioritized = manager.getPrioritizedTasks();
