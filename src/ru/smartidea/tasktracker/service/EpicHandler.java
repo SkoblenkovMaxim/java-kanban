@@ -22,50 +22,45 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         logger.info("Началась обработка /Epic запроса от клиента.");
-        Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
-        Epic epicID = manager.getEpicId(id);
 
         switch (httpExchange.getRequestMethod()) {
             case "POST":
                 InputStream inputStream = httpExchange.getRequestBody();
                 String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 if (!body.isEmpty()) {
-                    Epic postTask = gson.fromJson(body, Epic.class);
+                    Epic postEpic = gson.fromJson(body, Epic.class);
                     try {
-                        manager.createEpic(postTask);
-                        writeResponse(httpExchange, "Задача создана.", 201);
+                        manager.createEpic(postEpic);
+                        writeResponse(httpExchange, "Эпик создан.", 201);
                     } catch (Exception e) {
                         sendServerError(httpExchange);
                     }
                 } else {
                     throw new RuntimeException("Данные не переданы");
                 }
-                break;
             case "GET":
-                //Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
-                String subPath = getPath(httpExchange.getRequestURI().getPath());
-                if (epicID != null) {
-                    if (id == null) {
-                        List<Epic> tasks = manager.getAllEpic();
-                        String response = gson.toJson(tasks);
+                Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
+                if (id == null) {
+                    try {
+                        List<Epic> epics = manager.getAllEpic();
+                        String response = gson.toJson(epics);
                         sendText(httpExchange, response);
-                    } else if (subPath != null) {
-                        List<Integer> epicsSubTasks = manager.getEpicId(id).getSubtaskIds();
-                        String response = gson.toJson(epicsSubTasks);
-                        sendText(httpExchange, response);
-                    } else {
-                        if (epicID != null) {
-                            Task task = manager.getEpicId(id);
-                            String response = gson.toJson(task);
+                    } catch (Exception e) {
+                        sendServerError(httpExchange);
+                    }
+                } else {
+                    try {
+                        if (manager.getEpicId(id) != null) {
+                            Epic epic = manager.getEpicId(id);
+                            String response = gson.toJson(epic);
                             sendText(httpExchange, response);
                         } else {
                             sendNotFound(httpExchange, "Epic с id " + id + " отсутствует.");
                         }
+                    } catch (Exception e) {
+                        sendServerError(httpExchange);
                     }
-                } else {
-                    sendNotFound(httpExchange, "Эпика с id " + id + " нет.");
                 }
-                break;
             case "DELETE":
                 Integer deleteId = getIdFromPath(httpExchange.getRequestURI().getPath());
                 try {
@@ -78,7 +73,6 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 } catch (Exception e) {
                     sendServerError(httpExchange);
                 }
-                break;
             default:
                 try {
                     sendNotFound(httpExchange, "Такого запроса не существует");
