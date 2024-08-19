@@ -184,6 +184,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         for (Integer epicSub : epic.getSubtaskIds()) {
+
             TaskStatus status = getTaskSubMap().get(epicSub).getStatus();
             if (status != TaskStatus.NEW) {
                 isNew = false;
