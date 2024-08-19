@@ -51,7 +51,6 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 } else {
                     throw new RuntimeException("Данные не переданы");
                 }
-                break;
             case "GET":
                 Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
                 if (id == null) {
@@ -75,7 +74,6 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                         sendServerError(httpExchange);
                     }
                 }
-                break;
             case "DELETE":
                 Integer deleteId = getIdFromPath(httpExchange.getRequestURI().getPath());
                 try {
@@ -90,14 +88,12 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 } catch (Exception e) {
                     sendServerError(httpExchange);
                 }
-                break;
             default:
                 try {
                     sendNotFound(httpExchange, "Такого запроса не существует");
                 } catch (Exception e) {
                     sendServerError(httpExchange);
                 }
-                break;
         }
     }
 }
