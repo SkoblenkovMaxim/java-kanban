@@ -3,6 +3,7 @@ package ru.smartidea.tasktracker.service;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import ru.smartidea.tasktracker.model.Epic;
 import ru.smartidea.tasktracker.model.Subtask;
 
 import java.io.IOException;
@@ -50,7 +51,6 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 } else {
                     throw new RuntimeException("Данные не переданы");
                 }
-                break;
             case "GET":
                 Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
                 if (id == null) {
@@ -74,12 +74,13 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                         sendServerError(httpExchange);
                     }
                 }
-                break;
             case "DELETE":
                 Integer deleteId = getIdFromPath(httpExchange.getRequestURI().getPath());
                 try {
-                    if (manager.getSubtaskId(deleteId) != null) {
-                        manager.deleteTask(deleteId);
+                    Subtask subtask = manager.getSubtaskId(deleteId);
+                    Epic epic = manager.getEpicId(subtask.getEpicId());
+                    if (deleteId != null && epic != null) {
+                        manager.deleteSubtask(deleteId, epic);
                         writeResponse(httpExchange, "SubTask с id " + deleteId + "- удален.", 200);
                     } else {
                         sendNotFound(httpExchange, "SubTask с id " + deleteId + " отсутствует. Уточните id задачи и повторите запрос");
@@ -87,14 +88,12 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 } catch (Exception e) {
                     sendServerError(httpExchange);
                 }
-                break;
             default:
                 try {
                     sendNotFound(httpExchange, "Такого запроса не существует");
                 } catch (Exception e) {
                     sendServerError(httpExchange);
                 }
-                break;
         }
     }
 }
