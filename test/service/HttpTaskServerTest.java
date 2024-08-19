@@ -3,6 +3,7 @@ package service;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.*;
+import org.junit.runner.Request;
 import ru.smartidea.tasktracker.service.*;
 
 import java.io.IOException;
@@ -148,6 +149,7 @@ public class HttpTaskServerTest {
                 .build();
         HttpResponse<String> response = client.send(request, handler);
 
+        assertEquals(200, response.statusCode());
         assertEquals(1, manager.getAllTask().size());
     }
 
@@ -188,12 +190,17 @@ public class HttpTaskServerTest {
                 .GET()
                 .build();
         HttpResponse<String> response = client.send(request, handler);
+
         JsonElement jsonElement = JsonParser.parseString(response.body());
-        HashMap<Integer, Task> tasksFromJson =
-                gson.fromJson(jsonElement, new TypeToken<HashMap<Integer, Epic>>(){}.getType());
+
+        Gson gson = new GsonBuilder().setPrettyPrinting()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+        List<Epic> epicsFromJson =
+                gson.fromJson(jsonElement, new TypeToken<List<Epic>>(){}.getType());
 
         assertEquals(200, response.statusCode());
-        assertTrue(tasksFromJson.size() == 2);
+        assertEquals(2, epicsFromJson.size());
     }
 
     @Test
