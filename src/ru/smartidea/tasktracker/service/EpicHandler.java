@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.smartidea.tasktracker.model.Epic;
+import ru.smartidea.tasktracker.model.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,11 +29,24 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 if (!body.isEmpty()) {
                     Epic postEpic = gson.fromJson(body, Epic.class);
-                    try {
-                        manager.createEpic(postEpic);
-                        writeResponse(httpExchange, "Эпик создан.", 201);
-                    } catch (Exception e) {
-                        sendServerError(httpExchange);
+                    if (postEpic.getId() == 0) {
+                        try {
+                            manager.createEpic(postEpic);
+                            writeResponse(httpExchange, "Эпик создан.", 201);
+                        } catch (IntersectionException e) {
+                            sendHasInteractions(httpExchange);
+                        } catch (Exception e) {
+                            sendServerError(httpExchange);
+                        }
+                    } else {
+                        try {
+                            manager.updateEpic(postEpic);
+                            writeResponse(httpExchange, "Эпик обновлен.", 201);
+                        } catch (IntersectionException e) {
+                            sendHasInteractions(httpExchange);
+                        } catch (Exception e) {
+                            sendServerError(httpExchange);
+                        }
                     }
                 } else {
                     throw new RuntimeException("Данные не переданы");
@@ -65,9 +79,9 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             case "DELETE":
                 Integer deleteId = getIdFromPath(httpExchange.getRequestURI().getPath());
                 try {
-                    if (manager.getSubtaskId(deleteId) != null) {
-                        manager.deleteTask(deleteId);
-                        writeResponse(httpExchange, "SubTask с id " + deleteId + "- удален.", 200);
+                    if (manager.getEpicId(deleteId) != null) {
+                        manager.deleteEpic(deleteId);
+                        writeResponse(httpExchange, "Epic с id " + deleteId + "- удален.", 200);
                     } else {
                         sendNotFound(httpExchange, "SubTask с id " + deleteId + " отсутствует. Уточните id задачи и повторите запрос");
                     }
