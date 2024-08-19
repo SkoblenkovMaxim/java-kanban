@@ -49,7 +49,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                     }
                 } else {
                     throw new RuntimeException("Данные не переданы");
-                }                
+                }
             case "GET":
                 Integer id = getIdFromPath(httpExchange.getRequestURI().getPath());
                 if (id == null) {
@@ -84,13 +84,13 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                     }
                 } catch (Exception e) {
                     sendServerError(httpExchange);
-                }                
+                }
             default:
                 try {
                     sendNotFound(httpExchange, "Такого запроса не существует");
                 } catch (Exception e) {
                     sendServerError(httpExchange);
-                }                
+                }
         }
     }
 }
