@@ -1,2 +1,6 @@
 # java-kanban
-Repository for homework project.
+Бэкенд веб-приложения по управлению задачами, подзадачами и эпиками.
+
+## Стэк
+* java 21
+* JUnit
